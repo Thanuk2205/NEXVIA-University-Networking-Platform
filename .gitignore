@@ -1,5 +1,10 @@
 node_modules/
 .env
+.env.*
+!.env.example
 dist/
 coverage/
-
+build/
+*.log
+.DS_Store
+Thumbs.db
