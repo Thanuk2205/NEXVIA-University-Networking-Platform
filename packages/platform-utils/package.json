@@ -1,0 +1,19 @@
+{
+  "name": "@nexvia/platform-utils",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "dependencies": {
+    "express": "4.22.3",
+    "mongoose": "8.24.5",
+    "jsonwebtoken": "^9.0.3",
+    "helmet": "^8.1.0",
+    "express-rate-limit": "^8.2.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "zod": "^4.3.6",
+    "bcryptjs": "^3.0.3"
+  }
+}

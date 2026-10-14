@@ -1,0 +1,2902 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Nexvia notification",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    }
+  ],
+  "paths": {
+    "/api/v1/admin/delivery-jobs": {
+      "get": {
+        "operationId": "notification_get__admin_delivery_jobs",
+        "tags": [
+          "notification"
+        ],
+        "summary": "GET /admin/delivery-jobs",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        }
+      }
+    },
+    "/api/v1/admin/delivery-jobs/{id}/reconcile": {
+      "post": {
+        "operationId": "notification_post__admin_delivery_jobs__id__reconcile",
+        "tags": [
+          "notification"
+        ],
+        "summary": "POST /admin/delivery-jobs/{id}/reconcile",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 128
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "See the owner route validation and role-specific schema. Unknown writable fields are rejected."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notifications": {
+      "get": {
+        "operationId": "notification_get__notifications",
+        "tags": [
+          "notification"
+        ],
+        "summary": "GET /notifications",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        }
+      }
+    },
+    "/api/v1/notifications/{id}/read": {
+      "patch": {
+        "operationId": "notification_patch__notifications__id__read",
+        "tags": [
+          "notification"
+        ],
+        "summary": "PATCH /notifications/{id}/read",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 128
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "See the owner route validation and role-specific schema. Unknown writable fields are rejected."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notifications/read-all": {
+      "post": {
+        "operationId": "notification_post__notifications_read_all",
+        "tags": [
+          "notification"
+        ],
+        "summary": "POST /notifications/read-all",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 128
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "See the owner route validation and role-specific schema. Unknown writable fields are rejected."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notifications/delivery/me": {
+      "get": {
+        "operationId": "notification_get__notifications_delivery_me",
+        "tags": [
+          "notification"
+        ],
+        "summary": "GET /notifications/delivery/me",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        }
+      }
+    },
+    "/api/v1/notification-preferences": {
+      "get": {
+        "operationId": "notification_get__notification_preferences",
+        "tags": [
+          "notification"
+        ],
+        "summary": "GET /notification-preferences",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        }
+      },
+      "patch": {
+        "operationId": "notification_patch__notification_preferences",
+        "tags": [
+          "notification"
+        ],
+        "summary": "PATCH /notification-preferences",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 128
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "See the owner route validation and role-specific schema. Unknown writable fields are rejected."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/operations/notification/outbox": {
+      "get": {
+        "operationId": "notification_get__operations_notification_outbox",
+        "tags": [
+          "notification"
+        ],
+        "summary": "GET /operations/notification/outbox",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        }
+      }
+    },
+    "/api/v1/operations/notification/outbox/{id}/retry": {
+      "post": {
+        "operationId": "notification_post__operations_notification_outbox__id__retry",
+        "tags": [
+          "notification"
+        ],
+        "summary": "POST /operations/notification/outbox/{id}/retry",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 128
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "See the owner route validation and role-specific schema. Unknown writable fields are rejected."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/operations/notification/audit": {
+      "get": {
+        "operationId": "notification_get__operations_notification_audit",
+        "tags": [
+          "notification"
+        ],
+        "summary": "GET /operations/notification/audit",
+        "description": "Permissions, field visibility, readiness and lifecycle rules are enforced by the owning service. See the implementation plan and domain schemas.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner-authorized result; JSON uses { data, meta }."
+          },
+          "201": {
+            "description": "Resource created."
+          },
+          "202": {
+            "description": "Durable job queued; stable ID and status URL returned."
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "401": {
+            "description": "Authentication required or session revoked."
+          },
+          "403": {
+            "description": "Role, scope, verification or consent denied."
+          },
+          "404": {
+            "description": "Resource unavailable to this actor."
+          },
+          "409": {
+            "description": "Lifecycle, duplicate or idempotency conflict."
+          },
+          "412": {
+            "description": "Stale revision."
+          },
+          "429": {
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "description": "Required dependency unavailable."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "nx_access"
+      }
+    },
+    "schemas": {
+      "PostInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "tags": {
+            "default": [],
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 30
+            }
+          },
+          "opportunityId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "postType": {
+            "default": "update",
+            "type": "string",
+            "enum": [
+              "update",
+              "job"
+            ]
+          },
+          "job": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 160
+              },
+              "company": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 160
+              },
+              "location": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 160
+              },
+              "employmentType": {
+                "type": "string",
+                "enum": [
+                  "internship",
+                  "full-time",
+                  "part-time",
+                  "contract"
+                ]
+              },
+              "deadline": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              }
+            },
+            "required": [
+              "title",
+              "company",
+              "employmentType"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "body",
+          "tags",
+          "postType"
+        ],
+        "additionalProperties": false
+      },
+      "PostApplicationInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "postRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "cvUploadId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "consent": {
+            "type": "boolean",
+            "const": true
+          },
+          "message": {
+            "default": "",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "contactEmail": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          }
+        },
+        "required": [
+          "postRevision",
+          "cvUploadId",
+          "consent",
+          "message"
+        ],
+        "additionalProperties": false
+      },
+      "PostApplicationStatusInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "reviewing",
+              "forwarded",
+              "declined"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "status",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "LoginInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "RegistrationInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128
+          },
+          "fullName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "student",
+              "alumni",
+              "employer"
+            ]
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "fullName",
+          "role"
+        ],
+        "additionalProperties": false
+      },
+      "TokenInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{64}$"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "additionalProperties": false
+      },
+      "ResetPasswordInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{64}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "token",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "CvGenerationInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "aiConsent": {
+            "type": "boolean"
+          },
+          "includeContactEmail": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "aiConsent",
+          "includeContactEmail"
+        ],
+        "additionalProperties": false
+      },
+      "CvReviewInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "object",
+            "properties": {
+              "fullName": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 120
+              },
+              "contactEmail": {
+                "type": "string",
+                "maxLength": 254,
+                "format": "email",
+                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              "headline": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 120
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 2000
+              },
+              "education": {
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "institution": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 200
+                    },
+                    "qualification": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 200
+                    },
+                    "startYear": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "endYear": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "institution",
+                    "qualification",
+                    "startYear"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "skills": {
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                }
+              },
+              "projects": {
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 200
+                    },
+                    "description": {
+                      "type": "string",
+                      "minLength": 0,
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "description"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "experience": {
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 120
+                    },
+                    "organization": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 200
+                    },
+                    "description": {
+                      "type": "string",
+                      "minLength": 0,
+                      "maxLength": 2000
+                    },
+                    "startDate": {
+                      "type": "string"
+                    },
+                    "endDate": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "organization",
+                    "startDate"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "certifications": {
+                "maxItems": 25,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 200
+                    },
+                    "issuer": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 200
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "issuer"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "achievements": {
+                "maxItems": 25,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 200
+                    },
+                    "description": {
+                      "type": "string",
+                      "minLength": 0,
+                      "maxLength": 1000
+                    }
+                  },
+                  "required": [
+                    "title"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "fullName",
+              "summary",
+              "education",
+              "skills",
+              "projects",
+              "experience",
+              "certifications",
+              "achievements"
+            ],
+            "additionalProperties": false
+          },
+          "reviewed": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "content",
+          "reviewed"
+        ],
+        "additionalProperties": false
+      },
+      "ApplicationInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "consent": {
+            "type": "boolean",
+            "const": true
+          },
+          "opportunityRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "cvDocumentId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          }
+        },
+        "required": [
+          "consent",
+          "opportunityRevision"
+        ],
+        "additionalProperties": false
+      },
+      "DispatchPreviewInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "contentType": {
+            "type": "string",
+            "enum": [
+              "academic_notice",
+              "opportunity"
+            ]
+          },
+          "contentId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "criteria": {
+            "type": "object",
+            "properties": {
+              "facultyId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "departmentId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "degreeProgramId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "batchId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "academicYear": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10
+              }
+            },
+            "additionalProperties": false
+          },
+          "universityWide": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "contentType",
+          "contentId",
+          "criteria",
+          "universityWide"
+        ],
+        "additionalProperties": false
+      },
+      "DispatchConfirmInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "previewId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          }
+        },
+        "required": [
+          "previewId"
+        ],
+        "additionalProperties": false
+      },
+      "OpportunityInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "internship",
+              "job",
+              "academic",
+              "career",
+              "event"
+            ]
+          },
+          "employmentType": {
+            "type": "string",
+            "enum": [
+              "internship",
+              "full-time",
+              "part-time",
+              "contract"
+            ]
+          },
+          "location": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200
+          },
+          "applicationMethod": {
+            "type": "string",
+            "enum": [
+              "internal",
+              "external",
+              "none"
+            ]
+          },
+          "applicationUrl": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "scope": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "facultyId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "departmentId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "degreeProgramId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "batchId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "academicYear": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10
+              }
+            },
+            "additionalProperties": false
+          },
+          "eligibleRoles": {
+            "default": [
+              "student"
+            ],
+            "minItems": 1,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "student",
+                "alumni"
+              ]
+            }
+          },
+          "mandatorySkills": {
+            "default": [],
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f\\d]{24}$"
+            }
+          },
+          "skillMode": {
+            "default": "all",
+            "type": "string",
+            "enum": [
+              "all",
+              "any"
+            ]
+          },
+          "preferredSkills": {
+            "default": [],
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f\\d]{24}$"
+            }
+          },
+          "preferredDegrees": {
+            "default": [],
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f\\d]{24}$"
+            }
+          },
+          "preferredAchievementKinds": {
+            "default": [],
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "academic_award",
+                "competition",
+                "publication",
+                "other"
+              ]
+            }
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "kind",
+          "applicationMethod",
+          "scope",
+          "eligibleRoles",
+          "mandatorySkills",
+          "skillMode",
+          "preferredSkills",
+          "preferredDegrees",
+          "preferredAchievementKinds"
+        ],
+        "additionalProperties": false
+      },
+      "AcademicNoticeInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 200
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "academic",
+              "career",
+              "event",
+              "deadline",
+              "general"
+            ]
+          },
+          "scope": {
+            "type": "object",
+            "properties": {
+              "facultyId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "departmentId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "degreeProgramId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "batchId": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+              },
+              "academicYear": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10
+              }
+            },
+            "additionalProperties": false
+          },
+          "relatedOpportunityId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "referenceUrl": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+        },
+        "required": [
+          "title",
+          "body",
+          "category",
+          "scope"
+        ],
+        "additionalProperties": false
+      },
+      "CvDocument": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "contactEmail": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "headline": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 120
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "education": {
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "institution": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "qualification": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "startYear": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "endYear": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "institution",
+                "qualification",
+                "startYear"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "skills": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          },
+          "projects": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "title",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "experience": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 120
+                },
+                "organization": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                },
+                "startDate": {
+                  "type": "string"
+                },
+                "endDate": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "title",
+                "organization",
+                "startDate"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "certifications": {
+            "maxItems": 25,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "issuer": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                }
+              },
+              "required": [
+                "name",
+                "issuer"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "achievements": {
+            "maxItems": 25,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 1000
+                }
+              },
+              "required": [
+                "title"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "fullName",
+          "summary",
+          "education",
+          "skills",
+          "projects",
+          "experience",
+          "certifications",
+          "achievements"
+        ],
+        "additionalProperties": false
+      },
+      "studentProfileInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "headline": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 120
+          },
+          "bio": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 1000
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 100
+              },
+              "countryCode": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "professionalLinks": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "label",
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "profileVisibility": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "university"
+            ]
+          },
+          "registrationNumber": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "facultyId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "departmentId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "degreeProgramId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "batchId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "academicYear": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "careerInterests": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          "skills": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f\\d]{24}$"
+            }
+          },
+          "education": {
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "institution": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "qualification": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "startYear": {
+                  "type": "integer",
+                  "minimum": 1900,
+                  "maximum": 2026
+                },
+                "endYear": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 2036
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isCurrent": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 1000
+                }
+              },
+              "required": [
+                "institution",
+                "qualification",
+                "startYear"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "projects": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                },
+                "skillIds": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-f\\d]{24}$"
+                  }
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "title",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "experience": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 120
+                },
+                "organization": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "endDate": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isCurrent": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "title",
+                "organization",
+                "startDate"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "certifications": {
+            "maxItems": 25,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "issuer": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "issuedDate": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "expiresDate": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "credentialUrl": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "name",
+                "issuer",
+                "issuedDate"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "achievements": {
+            "maxItems": 25,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "academic_award",
+                    "competition",
+                    "publication",
+                    "other"
+                  ]
+                },
+                "issuer": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 200
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 1000
+                }
+              },
+              "required": [
+                "title",
+                "kind"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "visibleCareerFields": {
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "candidateDiscovery": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "enabled"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "alumniProfileInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "headline": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 120
+          },
+          "bio": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 1000
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 100
+              },
+              "countryCode": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "professionalLinks": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "label",
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "profileVisibility": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "university"
+            ]
+          },
+          "registrationNumber": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "facultyId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "departmentId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "degreeProgramId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "batchId": {
+            "type": "string",
+            "pattern": "^[a-f\\d]{24}$"
+          },
+          "academicYear": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "careerInterests": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          "skills": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f\\d]{24}$"
+            }
+          },
+          "education": {
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "institution": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "qualification": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "startYear": {
+                  "type": "integer",
+                  "minimum": 1900,
+                  "maximum": 2026
+                },
+                "endYear": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 2036
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isCurrent": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 1000
+                }
+              },
+              "required": [
+                "institution",
+                "qualification",
+                "startYear"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "projects": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                },
+                "skillIds": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-f\\d]{24}$"
+                  }
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "title",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "experience": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 120
+                },
+                "organization": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "endDate": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isCurrent": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "title",
+                "organization",
+                "startDate"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "certifications": {
+            "maxItems": 25,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "issuer": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "issuedDate": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "expiresDate": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "credentialUrl": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "name",
+                "issuer",
+                "issuedDate"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "achievements": {
+            "maxItems": 25,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 200
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "academic_award",
+                    "competition",
+                    "publication",
+                    "other"
+                  ]
+                },
+                "issuer": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 200
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 1000
+                }
+              },
+              "required": [
+                "title",
+                "kind"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "visibleCareerFields": {
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "candidateDiscovery": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "enabled"
+            ],
+            "additionalProperties": false
+          },
+          "currentJobTitle": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 120
+          },
+          "currentOrganization": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200
+          },
+          "employmentStatus": {
+            "type": "string",
+            "enum": [
+              "employed",
+              "seeking_work",
+              "further_study",
+              "other"
+            ]
+          },
+          "alumniDirectory": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "enabled"
+            ],
+            "additionalProperties": false
+          },
+          "mentoringOptIn": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "employerProfileInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "headline": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 120
+          },
+          "bio": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 1000
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 100
+              },
+              "countryCode": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "professionalLinks": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "label",
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "profileVisibility": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "university"
+            ]
+          },
+          "visibleProfileFields": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recruiterJobTitle": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 120
+          },
+          "organizationDescription": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          }
+        },
+        "additionalProperties": false
+      },
+      "facultyProfileInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "headline": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 120
+          },
+          "bio": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 1000
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 100
+              },
+              "countryCode": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "professionalLinks": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "label",
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "profileVisibility": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "university"
+            ]
+          },
+          "visibleProfileFields": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "staffReference": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "designation": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "officeContactUrl": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          }
+        },
+        "additionalProperties": false
+      },
+      "adminProfileInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "headline": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 120
+          },
+          "bio": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 1000
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "city": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 100
+              },
+              "countryCode": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              }
+            },
+            "additionalProperties": false
+          },
+          "professionalLinks": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "label",
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "profileVisibility": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "university"
+            ]
+          },
+          "visibleProfileFields": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "staffReference": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "designation": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "officeContactUrl": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

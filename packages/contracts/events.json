@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "eventId",
+    "source",
+    "type",
+    "aggregateId",
+    "revision",
+    "data"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "source": {
+      "enum": [
+        "identity",
+        "profile",
+        "opportunity",
+        "matching",
+        "community",
+        "notification",
+        "cv"
+      ]
+    },
+    "type": {
+      "enum": [
+        "AccountRegistered.v1",
+        "AccountEligibilityChanged.v1",
+        "VerificationEmailRequested.v1",
+        "PasswordResetRequested.v1",
+        "AccountDeletionRequested.v1",
+        "GraduationVerified.v1",
+        "GraduationRoleChanged.v1",
+        "ProfileMatchingChanged.v1",
+        "OrganizationApprovalChanged.v1",
+        "OpportunityPublished.v1",
+        "OpportunityUpdated.v1",
+        "OpportunityClosed.v1",
+        "AcademicNoticePublished.v1",
+        "AcademicNoticeUpdated.v1",
+        "AcademicNoticeArchived.v1",
+        "DispatchNotificationRequested.v1",
+        "ApplicationStatusChanged.v1",
+        "CvGenerationCompleted.v1",
+        "PostApplicationSubmitted.v1",
+        "PostApplicationStatusChanged.v1"
+      ]
+    },
+    "aggregateId": {
+      "type": "string"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "data": {
+      "type": "object",
+      "description": "Contract-specific minimal data; recovery/verification events carry only an opaque handle, never token material."
+    }
+  }
+}
