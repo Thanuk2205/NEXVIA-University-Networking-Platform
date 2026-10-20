@@ -1,0 +1,2 @@
+import { defineConfig } from '@playwright/test';
+export default defineConfig({testDir:'tests/browser',fullyParallel:false,workers:1,timeout:60000,use:{baseURL:'http://localhost:5301',channel:'chromium',headless:true,trace:'retain-on-failure',screenshot:'only-on-failure'},webServer:{command:'node scripts/e2e-server.mjs',url:'http://localhost:5301',reuseExistingServer:false,timeout:90000},reporter:'list'});
