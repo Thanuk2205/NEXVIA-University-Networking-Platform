@@ -1,0 +1,358 @@
+{
+  "name": "nexvia",
+  "services": {
+    "mongo": {
+      "image": "mongo:8.2",
+      "environment": {
+        "MONGO_INITDB_ROOT_USERNAME": "nexvia_root",
+        "MONGO_INITDB_ROOT_PASSWORD": "${MONGO_ROOT_PASSWORD}"
+      },
+      "command": [
+        "bash",
+        "-c",
+        "cp /run/secrets/mongo-key /tmp/mongo-key && chmod 400 /tmp/mongo-key && chown mongodb:mongodb /tmp/mongo-key && exec /usr/local/bin/docker-entrypoint.sh mongod --replSet nexvia --bind_ip_all --keyFile /tmp/mongo-key"
+      ],
+      "volumes": [
+        "mongo-data:/data/db",
+        "../.local/mongo-keyfile:/run/secrets/mongo-key:ro"
+      ],
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "--eval",
+          "db.adminCommand('ping').ok"
+        ],
+        "interval": "5s",
+        "timeout": "5s",
+        "retries": 30
+      }
+    },
+    "mongo-init": {
+      "image": "mongo:8.2",
+      "depends_on": {
+        "mongo": {
+          "condition": "service_healthy"
+        }
+      },
+      "environment": {
+        "MONGO_ROOT_PASSWORD": "${MONGO_ROOT_PASSWORD}",
+        "IDENTITY_DB_PASSWORD": "${IDENTITY_DB_PASSWORD}",
+        "PROFILE_DB_PASSWORD": "${PROFILE_DB_PASSWORD}",
+        "OPPORTUNITY_DB_PASSWORD": "${OPPORTUNITY_DB_PASSWORD}",
+        "MATCHING_DB_PASSWORD": "${MATCHING_DB_PASSWORD}",
+        "COMMUNITY_DB_PASSWORD": "${COMMUNITY_DB_PASSWORD}",
+        "NOTIFICATION_DB_PASSWORD": "${NOTIFICATION_DB_PASSWORD}",
+        "CV_DB_PASSWORD": "${CV_DB_PASSWORD}"
+      },
+      "volumes": [
+        "./mongo/initialize.js:/init/initialize.js:ro"
+      ],
+      "command": [
+        "mongosh",
+        "--nodb",
+        "--quiet",
+        "/init/initialize.js"
+      ],
+      "restart": "on-failure"
+    },
+    "api-gateway": {
+      "build": {
+        "context": "..",
+        "dockerfile": "apps/api-gateway/Dockerfile"
+      },
+      "environment": {
+        "NODE_ENV": "development",
+        "PORT": "5000",
+        "CLIENT_ORIGIN": "http://localhost:8080",
+        "USER_JWT_PUBLIC_KEY_FILE": "/run/publics/user-public.pem",
+        "SERVICE_PRIVATE_KEY_FILE": "/run/secrets/service-private.pem",
+        "SERVICE_KEYS_DIR": "/run/publics",
+        "SERVICE_URLS_JSON": "{\"identity\":\"http://identity-service:5101\",\"profile\":\"http://profile-service:5102\",\"opportunity\":\"http://opportunity-service:5103\",\"matching\":\"http://matching-service:5104\",\"community\":\"http://community-service:5105\",\"notification\":\"http://notification-service:5106\",\"cv\":\"http://cv-service:5107\"}"
+      },
+      "volumes": [
+        "../.local/user-public.pem:/run/publics/user-public.pem:ro",
+        "../.local/gateway-public.pem:/run/publics/gateway-public.pem:ro",
+        "../.local/identity-public.pem:/run/publics/identity-public.pem:ro",
+        "../.local/profile-public.pem:/run/publics/profile-public.pem:ro",
+        "../.local/opportunity-public.pem:/run/publics/opportunity-public.pem:ro",
+        "../.local/matching-public.pem:/run/publics/matching-public.pem:ro",
+        "../.local/community-public.pem:/run/publics/community-public.pem:ro",
+        "../.local/notification-public.pem:/run/publics/notification-public.pem:ro",
+        "../.local/cv-public.pem:/run/publics/cv-public.pem:ro",
+        "../.local/gateway-private.pem:/run/secrets/service-private.pem:ro"
+      ],
+      "depends_on": {
+        "mongo-init": {
+          "condition": "service_completed_successfully"
+        }
+      },
+      "restart": "unless-stopped"
+    },
+    "identity-service": {
+      "build": {
+        "context": "..",
+        "dockerfile": "services/identity-service/Dockerfile"
+      },
+      "environment": {
+        "NODE_ENV": "development",
+        "PORT": "5101",
+        "CLIENT_ORIGIN": "http://localhost:8080",
+        "USER_JWT_PUBLIC_KEY_FILE": "/run/publics/user-public.pem",
+        "SERVICE_PRIVATE_KEY_FILE": "/run/secrets/service-private.pem",
+        "SERVICE_KEYS_DIR": "/run/publics",
+        "SERVICE_URLS_JSON": "{\"identity\":\"http://identity-service:5101\",\"profile\":\"http://profile-service:5102\",\"opportunity\":\"http://opportunity-service:5103\",\"matching\":\"http://matching-service:5104\",\"community\":\"http://community-service:5105\",\"notification\":\"http://notification-service:5106\",\"cv\":\"http://cv-service:5107\"}",
+        "IDENTITY_MONGO_URI": "mongodb://nexvia_identity:${IDENTITY_DB_PASSWORD}@mongo:27017/nexvia_identity?replicaSet=nexvia",
+        "USER_JWT_PRIVATE_KEY_FILE": "/run/secrets/user-private.pem",
+        "TOKEN_ENCRYPTION_KEY_FILE": "/run/secrets/token-key.txt"
+      },
+      "volumes": [
+        "../.local/user-public.pem:/run/publics/user-public.pem:ro",
+        "../.local/gateway-public.pem:/run/publics/gateway-public.pem:ro",
+        "../.local/identity-public.pem:/run/publics/identity-public.pem:ro",
+        "../.local/profile-public.pem:/run/publics/profile-public.pem:ro",
+        "../.local/opportunity-public.pem:/run/publics/opportunity-public.pem:ro",
+        "../.local/matching-public.pem:/run/publics/matching-public.pem:ro",
+        "../.local/community-public.pem:/run/publics/community-public.pem:ro",
+        "../.local/notification-public.pem:/run/publics/notification-public.pem:ro",
+        "../.local/cv-public.pem:/run/publics/cv-public.pem:ro",
+        "../.local/identity-private.pem:/run/secrets/service-private.pem:ro",
+        "../.local/user-private.pem:/run/secrets/user-private.pem:ro",
+        "../.local/token-key.txt:/run/secrets/token-key.txt:ro"
+      ],
+      "depends_on": {
+        "mongo-init": {
+          "condition": "service_completed_successfully"
+        }
+      },
+      "restart": "unless-stopped"
+    },
+    "profile-service": {
+      "build": {
+        "context": "..",
+        "dockerfile": "services/profile-service/Dockerfile"
+      },
+      "environment": {
+        "NODE_ENV": "development",
+        "PORT": "5102",
+        "CLIENT_ORIGIN": "http://localhost:8080",
+        "USER_JWT_PUBLIC_KEY_FILE": "/run/publics/user-public.pem",
+        "SERVICE_PRIVATE_KEY_FILE": "/run/secrets/service-private.pem",
+        "SERVICE_KEYS_DIR": "/run/publics",
+        "SERVICE_URLS_JSON": "{\"identity\":\"http://identity-service:5101\",\"profile\":\"http://profile-service:5102\",\"opportunity\":\"http://opportunity-service:5103\",\"matching\":\"http://matching-service:5104\",\"community\":\"http://community-service:5105\",\"notification\":\"http://notification-service:5106\",\"cv\":\"http://cv-service:5107\"}",
+        "PROFILE_MONGO_URI": "mongodb://nexvia_profile:${PROFILE_DB_PASSWORD}@mongo:27017/nexvia_profile?replicaSet=nexvia"
+      },
+      "volumes": [
+        "../.local/user-public.pem:/run/publics/user-public.pem:ro",
+        "../.local/gateway-public.pem:/run/publics/gateway-public.pem:ro",
+        "../.local/identity-public.pem:/run/publics/identity-public.pem:ro",
+        "../.local/profile-public.pem:/run/publics/profile-public.pem:ro",
+        "../.local/opportunity-public.pem:/run/publics/opportunity-public.pem:ro",
+        "../.local/matching-public.pem:/run/publics/matching-public.pem:ro",
+        "../.local/community-public.pem:/run/publics/community-public.pem:ro",
+        "../.local/notification-public.pem:/run/publics/notification-public.pem:ro",
+        "../.local/cv-public.pem:/run/publics/cv-public.pem:ro",
+        "../.local/profile-private.pem:/run/secrets/service-private.pem:ro"
+      ],
+      "depends_on": {
+        "mongo-init": {
+          "condition": "service_completed_successfully"
+        }
+      },
+      "restart": "unless-stopped"
+    },
+    "opportunity-service": {
+      "build": {
+        "context": "..",
+        "dockerfile": "services/opportunity-service/Dockerfile"
+      },
+      "environment": {
+        "NODE_ENV": "development",
+        "PORT": "5103",
+        "CLIENT_ORIGIN": "http://localhost:8080",
+        "USER_JWT_PUBLIC_KEY_FILE": "/run/publics/user-public.pem",
+        "SERVICE_PRIVATE_KEY_FILE": "/run/secrets/service-private.pem",
+        "SERVICE_KEYS_DIR": "/run/publics",
+        "SERVICE_URLS_JSON": "{\"identity\":\"http://identity-service:5101\",\"profile\":\"http://profile-service:5102\",\"opportunity\":\"http://opportunity-service:5103\",\"matching\":\"http://matching-service:5104\",\"community\":\"http://community-service:5105\",\"notification\":\"http://notification-service:5106\",\"cv\":\"http://cv-service:5107\"}",
+        "OPPORTUNITY_MONGO_URI": "mongodb://nexvia_opportunity:${OPPORTUNITY_DB_PASSWORD}@mongo:27017/nexvia_opportunity?replicaSet=nexvia"
+      },
+      "volumes": [
+        "../.local/user-public.pem:/run/publics/user-public.pem:ro",
+        "../.local/gateway-public.pem:/run/publics/gateway-public.pem:ro",
+        "../.local/identity-public.pem:/run/publics/identity-public.pem:ro",
+        "../.local/profile-public.pem:/run/publics/profile-public.pem:ro",
+        "../.local/opportunity-public.pem:/run/publics/opportunity-public.pem:ro",
+        "../.local/matching-public.pem:/run/publics/matching-public.pem:ro",
+        "../.local/community-public.pem:/run/publics/community-public.pem:ro",
+        "../.local/notification-public.pem:/run/publics/notification-public.pem:ro",
+        "../.local/cv-public.pem:/run/publics/cv-public.pem:ro",
+        "../.local/opportunity-private.pem:/run/secrets/service-private.pem:ro"
+      ],
+      "depends_on": {
+        "mongo-init": {
+          "condition": "service_completed_successfully"
+        }
+      },
+      "restart": "unless-stopped"
+    },
+    "matching-service": {
+      "build": {
+        "context": "..",
+        "dockerfile": "services/matching-dispatch-service/Dockerfile"
+      },
+      "environment": {
+        "NODE_ENV": "development",
+        "PORT": "5104",
+        "CLIENT_ORIGIN": "http://localhost:8080",
+        "USER_JWT_PUBLIC_KEY_FILE": "/run/publics/user-public.pem",
+        "SERVICE_PRIVATE_KEY_FILE": "/run/secrets/service-private.pem",
+        "SERVICE_KEYS_DIR": "/run/publics",
+        "SERVICE_URLS_JSON": "{\"identity\":\"http://identity-service:5101\",\"profile\":\"http://profile-service:5102\",\"opportunity\":\"http://opportunity-service:5103\",\"matching\":\"http://matching-service:5104\",\"community\":\"http://community-service:5105\",\"notification\":\"http://notification-service:5106\",\"cv\":\"http://cv-service:5107\"}",
+        "MATCHING_MONGO_URI": "mongodb://nexvia_matching:${MATCHING_DB_PASSWORD}@mongo:27017/nexvia_matching?replicaSet=nexvia"
+      },
+      "volumes": [
+        "../.local/user-public.pem:/run/publics/user-public.pem:ro",
+        "../.local/gateway-public.pem:/run/publics/gateway-public.pem:ro",
+        "../.local/identity-public.pem:/run/publics/identity-public.pem:ro",
+        "../.local/profile-public.pem:/run/publics/profile-public.pem:ro",
+        "../.local/opportunity-public.pem:/run/publics/opportunity-public.pem:ro",
+        "../.local/matching-public.pem:/run/publics/matching-public.pem:ro",
+        "../.local/community-public.pem:/run/publics/community-public.pem:ro",
+        "../.local/notification-public.pem:/run/publics/notification-public.pem:ro",
+        "../.local/cv-public.pem:/run/publics/cv-public.pem:ro",
+        "../.local/matching-private.pem:/run/secrets/service-private.pem:ro"
+      ],
+      "depends_on": {
+        "mongo-init": {
+          "condition": "service_completed_successfully"
+        }
+      },
+      "restart": "unless-stopped"
+    },
+    "community-service": {
+      "build": {
+        "context": "..",
+        "dockerfile": "services/community-service/Dockerfile"
+      },
+      "environment": {
+        "NODE_ENV": "development",
+        "PORT": "5105",
+        "CLIENT_ORIGIN": "http://localhost:8080",
+        "USER_JWT_PUBLIC_KEY_FILE": "/run/publics/user-public.pem",
+        "SERVICE_PRIVATE_KEY_FILE": "/run/secrets/service-private.pem",
+        "SERVICE_KEYS_DIR": "/run/publics",
+        "SERVICE_URLS_JSON": "{\"identity\":\"http://identity-service:5101\",\"profile\":\"http://profile-service:5102\",\"opportunity\":\"http://opportunity-service:5103\",\"matching\":\"http://matching-service:5104\",\"community\":\"http://community-service:5105\",\"notification\":\"http://notification-service:5106\",\"cv\":\"http://cv-service:5107\"}",
+        "COMMUNITY_MONGO_URI": "mongodb://nexvia_community:${COMMUNITY_DB_PASSWORD}@mongo:27017/nexvia_community?replicaSet=nexvia"
+      },
+      "volumes": [
+        "../.local/user-public.pem:/run/publics/user-public.pem:ro",
+        "../.local/gateway-public.pem:/run/publics/gateway-public.pem:ro",
+        "../.local/identity-public.pem:/run/publics/identity-public.pem:ro",
+        "../.local/profile-public.pem:/run/publics/profile-public.pem:ro",
+        "../.local/opportunity-public.pem:/run/publics/opportunity-public.pem:ro",
+        "../.local/matching-public.pem:/run/publics/matching-public.pem:ro",
+        "../.local/community-public.pem:/run/publics/community-public.pem:ro",
+        "../.local/notification-public.pem:/run/publics/notification-public.pem:ro",
+        "../.local/cv-public.pem:/run/publics/cv-public.pem:ro",
+        "../.local/community-private.pem:/run/secrets/service-private.pem:ro"
+      ],
+      "depends_on": {
+        "mongo-init": {
+          "condition": "service_completed_successfully"
+        }
+      },
+      "restart": "unless-stopped"
+    },
+    "notification-service": {
+      "build": {
+        "context": "..",
+        "dockerfile": "services/notification-service/Dockerfile"
+      },
+      "environment": {
+        "NODE_ENV": "development",
+        "PORT": "5106",
+        "CLIENT_ORIGIN": "http://localhost:8080",
+        "USER_JWT_PUBLIC_KEY_FILE": "/run/publics/user-public.pem",
+        "SERVICE_PRIVATE_KEY_FILE": "/run/secrets/service-private.pem",
+        "SERVICE_KEYS_DIR": "/run/publics",
+        "SERVICE_URLS_JSON": "{\"identity\":\"http://identity-service:5101\",\"profile\":\"http://profile-service:5102\",\"opportunity\":\"http://opportunity-service:5103\",\"matching\":\"http://matching-service:5104\",\"community\":\"http://community-service:5105\",\"notification\":\"http://notification-service:5106\",\"cv\":\"http://cv-service:5107\"}",
+        "NOTIFICATION_MONGO_URI": "mongodb://nexvia_notification:${NOTIFICATION_DB_PASSWORD}@mongo:27017/nexvia_notification?replicaSet=nexvia",
+        "GMAIL_SENDER": "${GMAIL_SENDER:-}",
+        "GMAIL_CLIENT_ID": "${GMAIL_CLIENT_ID:-}",
+        "GMAIL_CLIENT_SECRET": "${GMAIL_CLIENT_SECRET:-}",
+        "GMAIL_REFRESH_TOKEN": "${GMAIL_REFRESH_TOKEN:-}"
+      },
+      "volumes": [
+        "../.local/user-public.pem:/run/publics/user-public.pem:ro",
+        "../.local/gateway-public.pem:/run/publics/gateway-public.pem:ro",
+        "../.local/identity-public.pem:/run/publics/identity-public.pem:ro",
+        "../.local/profile-public.pem:/run/publics/profile-public.pem:ro",
+        "../.local/opportunity-public.pem:/run/publics/opportunity-public.pem:ro",
+        "../.local/matching-public.pem:/run/publics/matching-public.pem:ro",
+        "../.local/community-public.pem:/run/publics/community-public.pem:ro",
+        "../.local/notification-public.pem:/run/publics/notification-public.pem:ro",
+        "../.local/cv-public.pem:/run/publics/cv-public.pem:ro",
+        "../.local/notification-private.pem:/run/secrets/service-private.pem:ro"
+      ],
+      "depends_on": {
+        "mongo-init": {
+          "condition": "service_completed_successfully"
+        }
+      },
+      "restart": "unless-stopped"
+    },
+    "cv-service": {
+      "build": {
+        "context": "..",
+        "dockerfile": "services/cv-service/Dockerfile"
+      },
+      "environment": {
+        "NODE_ENV": "development",
+        "PORT": "5107",
+        "CLIENT_ORIGIN": "http://localhost:8080",
+        "USER_JWT_PUBLIC_KEY_FILE": "/run/publics/user-public.pem",
+        "SERVICE_PRIVATE_KEY_FILE": "/run/secrets/service-private.pem",
+        "SERVICE_KEYS_DIR": "/run/publics",
+        "SERVICE_URLS_JSON": "{\"identity\":\"http://identity-service:5101\",\"profile\":\"http://profile-service:5102\",\"opportunity\":\"http://opportunity-service:5103\",\"matching\":\"http://matching-service:5104\",\"community\":\"http://community-service:5105\",\"notification\":\"http://notification-service:5106\",\"cv\":\"http://cv-service:5107\"}",
+        "CV_MONGO_URI": "mongodb://nexvia_cv:${CV_DB_PASSWORD}@mongo:27017/nexvia_cv?replicaSet=nexvia",
+        "GEMINI_API_KEY": "${GEMINI_API_KEY:-}",
+        "GEMINI_MODEL": "${GEMINI_MODEL:-}"
+      },
+      "volumes": [
+        "../.local/user-public.pem:/run/publics/user-public.pem:ro",
+        "../.local/gateway-public.pem:/run/publics/gateway-public.pem:ro",
+        "../.local/identity-public.pem:/run/publics/identity-public.pem:ro",
+        "../.local/profile-public.pem:/run/publics/profile-public.pem:ro",
+        "../.local/opportunity-public.pem:/run/publics/opportunity-public.pem:ro",
+        "../.local/matching-public.pem:/run/publics/matching-public.pem:ro",
+        "../.local/community-public.pem:/run/publics/community-public.pem:ro",
+        "../.local/notification-public.pem:/run/publics/notification-public.pem:ro",
+        "../.local/cv-public.pem:/run/publics/cv-public.pem:ro",
+        "../.local/cv-private.pem:/run/secrets/service-private.pem:ro"
+      ],
+      "depends_on": {
+        "mongo-init": {
+          "condition": "service_completed_successfully"
+        }
+      },
+      "restart": "unless-stopped"
+    },
+    "web": {
+      "build": {
+        "context": "..",
+        "dockerfile": "frontend/Dockerfile"
+      },
+      "ports": [
+        "127.0.0.1:8080:80"
+      ],
+      "depends_on": [
+        "api-gateway"
+      ],
+      "restart": "unless-stopped"
+    }
+  },
+  "volumes": {
+    "mongo-data": {}
+  }
+}
