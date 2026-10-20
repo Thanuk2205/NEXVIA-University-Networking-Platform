@@ -1,0 +1,33 @@
+{
+  "name": "nexvia",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "setup": "node scripts/setup.mjs",
+    "seed": "node scripts/seed.mjs",
+    "seed:demo": "node scripts/seed-demo.mjs",
+    "build": "npm run build --workspace frontend",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs",
+    "test:e2e": "playwright test",
+    "check": "node scripts/check.mjs",
+    "format": "prettier --write apps services packages scripts tests frontend/src",
+    "contracts": "node scripts/contracts.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.0",
+    "mongodb-memory-server": "^11.0.0",
+    "supertest": "^7.2.2",
+    "prettier": "^3.8.0"
+  }
+}
