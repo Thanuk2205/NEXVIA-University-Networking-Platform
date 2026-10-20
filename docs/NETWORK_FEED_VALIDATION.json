@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-14",
+  "environment": "Windows, Node.js v24.13.1, authenticated MongoDB replica sets, Chromium",
+  "fullAutomatedSuite": { "passed": 40, "failed": 0 },
+  "chromiumBrowserJourneys": { "passed": 6, "failed": 0 },
+  "finalFeedPrivacyAssertions": {
+    "passed": 6,
+    "failed": 0,
+    "note": "Dedicated feed service tests repeated after minimizing the public post and consented application DTO fields."
+  },
+  "dependencyAudit": { "vulnerabilities": 0 },
+  "demoPosts": { "seeded": 5, "jobReferrals": 4, "careerUpdates": 1 },
+  "pdfUpload": "Existing PDF from disk, 2 MiB limit, header/end-marker validation, private download and one-hour unused-upload expiry",
+  "authorization": "Post author or owning applicant only; withdrawal revokes author download; admin role alone does not grant private CV access",
+  "providerChecks": "Synthetic data and fake Gmail provider in integration/browser tests; no live messages sent during validation",
+  "cvGeneration": "Remains deferred; no generator source changes",
+  "desktopAndMobile": "Browser screenshots inspected; 390px viewport overflow assertion passed",
+  "applyVisibilityFix": {
+    "cause": "An older development backend omitted acceptingApplications while serving the updated frontend.",
+    "focusedBrowserTestsPassed": 2,
+    "checks": "Prominent Apply control, own-post and staff restrictions, missing status without false closure, PDF application/review/withdrawal journey"
+  },
+  "localOperation": "Updated development stack restarted on 14 October 2026; all seven services ready. Authenticated student and alumni demo accounts each have three open referrals with Apply available. Demo data is already seeded."
+}

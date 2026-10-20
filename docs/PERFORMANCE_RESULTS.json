@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-08T10:54:44.733Z",
+  "node": "v24.13.1",
+  "platform": "win32",
+  "cpu": "13th Gen Intel(R) Core(TM) i5-1335U",
+  "logicalCpus": 12,
+  "ramGiB": 8,
+  "dataset": {
+    "syntheticProfiles": 5000,
+    "concurrentAuthenticatedReads": 100,
+    "dispatchRecipients": 1000
+  },
+  "ordinaryApi": {
+    "route": "GET /api/v1/opportunities?limit=20",
+    "p50Ms": 1387,
+    "p95Ms": 1450,
+    "maxMs": 1457,
+    "targetP95Ms": 500
+  },
+  "matching": {
+    "ms": 1803,
+    "returned": 20,
+    "targetMs": 30000
+  },
+  "dispatch": {
+    "ms": 45534,
+    "persisted": 1000,
+    "targetMs": 120000
+  },
+  "providerCalls": "Excluded; Gmail delivery is suppressed by default preferences.",
+  "limits": "Local single-host synthetic run; not a production availability or broad API performance guarantee."
+}
