@@ -1,0 +1,15 @@
+{
+  "name": "@nexvia/community-service",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "4.22.3",
+    "@nexvia/platform-utils": "1.0.0"
+  }
+}
