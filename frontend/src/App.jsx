@@ -1,5 +1,1 @@
-function App() {
-  return <main>Nexvia development environment is ready.</main>;
-}
-
-export default App;
+﻿export { default } from "./features/Portal.jsx";
